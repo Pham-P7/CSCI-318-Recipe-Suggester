@@ -1,6 +1,7 @@
 import sqlite3
 import csv
 
+# https://www.kaggle.com/datasets/irkaal/foodcom-recipes-and-reviews?utm_source=chatgpt.com
 with open('recipes.csv', 'r', encoding = 'utf-8') as csvFile:
     csvReader = csv.reader(csvFile)
     rows = list(csvReader)
@@ -43,7 +44,7 @@ cur.execute(create)
 # RELEVANT COLS
 col = [0, 1, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27]
 
-max = 75001
+max = 75001 # max size is len(rows)
 for i in rows[1:max]:
     command = 'INSERT INTO recipes VALUES('
     for j in col:
@@ -57,11 +58,43 @@ for i in rows[1:max]:
     print(str(i[0]) + ' good')
 conn.commit()
 
-#Test Call
+# TEST CALL
 cur.execute("SELECT recipeid FROM recipes WHERE recipeid <= 100")
 print(cur.fetchall())
 
+# ---Diet Labelling---
+keto = 'ALTER TABLE recipes ADD isKeto INTEGER DEFAULT 0'
+veg = 'ALTER TABLE recipes ADD isVeg INTEGER DEFAULT 1' # veg = vegatarian
+vegan = 'ALTER TABLE recipes ADD isVegan INTEGER DEFAULT 1'
+cur.execute(keto)
+cur.execute(veg)
+cur.execute(vegan)
 
+meat = ['beef', 'chicken', 'pork', 'lamb', 'venison', 'veal', 'duck', 'mutton']
+product = ['egg', 'lard', 'cream', 'milk', 'butter', 'yogurt', 'cheese', 'honey', 'gelatin']
 
+# keto = 70% fat, 20% protein, 10% carb https://pmc.ncbi.nlm.nih.gov/articles/PMC6251269/ : uses percent +- 1
+totalNutrients = '(fat + carbohydrate + protein)'
+fatCon = 'ROUND(fat / ' + totalNutrients + ' * 100, 0)'
+proteinCon = 'ROUND(protein / ' + totalNutrients + ' * 100, 0)'
+carbCon = 'ROUND(carbohydrate / ' + totalNutrients + ' * 100, 0)'
+isKeto = 'WHERE ' + fatCon + ' IN (69, 70, 71) AND ' + proteinCon + ' IN (19, 20, 21) AND ' + carbCon + ' IN (9, 10, 11)'
+command = 'UPDATE recipes SET isKeto = 1 ' + isKeto
+cur.execute(command)
 
+# isVeg = no meat
+for i in meat:
+    command = 'UPDATE recipes SET isVeg = 0 WHERE recipeIngredientParts LIKE \'%' + i + '%\''
+    cur.execute(command)
 
+# isVegan = isVeg AND no product
+cur.execute('UPDATE recipes SET isVegan = 0 WHERE isVeg == 0')
+for i in product:
+    command = 'UPDATE recipes SET isVegan = 0 WHERE recipeIngredientParts LIKE \'%' + i + '%\''
+    cur.execute(command)
+
+# conn.commit()
+
+# TEST CALL
+cur.execute("SELECT SUM(isKeto), SUM(isVeg), SUM(isVegan) FROM recipes")
+print(cur.fetchall())
