@@ -70,5 +70,4 @@ Recipes with parsing errors are kept with their original values and error messag
 The code focuses on ingredients and quantities. It does not clean images,
 nutrition information, or cooking times.
 
-The version has not yet completed formal regression testing.
-I'll work on testing over the next few days.
+

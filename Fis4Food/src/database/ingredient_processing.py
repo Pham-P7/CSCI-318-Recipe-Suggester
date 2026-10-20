@@ -25,7 +25,7 @@ def parse_ingredients(value):
     text = value.strip()
     if not text or text in MISSING:
         return None
-    if "".join(text.split()) == "character(0)":
+    if text.startswith("character") and "".join(text[len("character"):].split()) == "(0)":
         return []
     is_vector = text.startswith("c")
     if is_vector:
