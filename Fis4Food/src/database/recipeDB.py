@@ -43,10 +43,32 @@ cur.execute(create)
 
 # RELEVANT COLS
 col = [0, 1, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27]
+colText = '''(name, 
+authorname, 
+cooktime, 
+preptime, 
+totaltime, 
+description, 
+images, 
+recipecategory, 
+keywords, 
+recipeingredientquantities, 
+recipeingredientparts, 
+calories, 
+fat, 
+saturatedfat, 
+cholesterol, 
+sodium, 
+carbohydrate, 
+fiber, 
+sugar, 
+protein, 
+recipeserving, 
+recipeinstructions)'''
 
 max = 75001 # max size is len(rows)
 for i in rows[1:max]:
-    command = 'INSERT INTO recipes VALUES('
+    command = 'INSERT INTO recipes' + colText + 'VALUES('
     for j in col:
         val = i[j]
         if isinstance(val, str):
