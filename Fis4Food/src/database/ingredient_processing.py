@@ -51,9 +51,21 @@ def parse_ingredients(value):
                 character = text[index]
                 if character == "\\":
                     index += 1
-                    if index == len(text) or text[index] not in escapes:
+                    if index == len(text):
                         raise ValueError("Unsupported or unfinished escape sequence")
-                    character = escapes[text[index]]
+                    if text[index] in "01234567":
+                        end = index
+                        while end < len(text) and end < index + 3 and text[end] in "01234567":
+                            end += 1
+                        code = int(text[index:end], 8)
+                        if code == 0 or code > 255:
+                            raise ValueError("Invalid R octal escape")
+                        character = chr(code)
+                        index = end - 1
+                    elif text[index] in escapes:
+                        character = escapes[text[index]]
+                    else:
+                        raise ValueError("Unsupported or unfinished escape sequence")
                 name += character
                 index += 1
             if index == len(text):
