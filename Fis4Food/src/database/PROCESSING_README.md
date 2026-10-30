@@ -1,74 +1,42 @@
-# Data Cleaning
+## What the Scripts Do
 
-This is the data cleaning part of our CSCI 318 Recipe Recommender project.
+- `ingredient_processing.py` reads R-style lists and creates ingredient matching keys.
+  It uses lowercase, removes extra spaces, and applies a few aliases, like `eggs` to `egg`.
+- Original ingredient names and positions are kept. Missing values, duplicates,
+  parsing errors, and ingredient-quantity count differences are reported.
+- `ingredient_quantity_matching.py` adds a display table to a new database copy.
+  It uses reviewed source quantities and leaves uncertain amounts as `NULL`.
 
-The Python script organizes ingredient data from our SQLite database. The goal
-is to make ingredient names easier to use for recipe searching and recommendations.
+## Output and Backend Use
 
-## What the Code Does
+The ingredient cleaning folder contains:
 
-The script `ingredient_processing.py`:
+- `ingredients.jsonl`: original names, positions, and matching keys.
+- `recipes.jsonl`: raw and parsed ingredient lists, quantities, and recipe issues.
+- `validation_issues.jsonl`: data problems found during processing.
+- `summary.json`: basic counts. Each JSONL file stores one record per line.
 
-1. Reads recipe IDs, names, ingredients, and quantities from `db.db`.
-2. Converts R-style ingredient and quantity strings into Python lists.
-3. Cleans ingredient names by converting them to lowercase and removing extra spaces.
-4. Uses a small dictionary to standardize names such as `eggs` and `egg`.
-5. Checks for missing values, duplicate ingredients, parsing errors, and quantity mismatches.
-6. Saves the results in separate files and prints a basic summary.
+The quantity matching folder contains `metadata_with_ingredients.db` and `summary.json`.
+The database keeps the metadata tables and adds `recipe_ingredients` for display:
 
-The database is opened read-only and is not changed. Original recipe IDs,
-ingredient names, and ingredient order are preserved. Matching keys are
-stored separately, with duplicates removed only from those keys.
-
-## Example
-
-Original ingredient data:
-
-```text
-c("Eggs", "rice", "eggplant")
+```sql
+SELECT ingredient_name, quantity_text, pair_status, alternative_group
+FROM recipe_ingredients
+WHERE recipeId = ?
+ORDER BY COALESCE(source_line, position), position;
 ```
 
-After parsing and cleaning, the matching keys become:
+Show rows with the same non-NULL `alternative_group` as OR choices.
+Keep unresolved ingredients visible with an unavailable-quantity label.
+For recommendations, count repeated matching keys once.
 
-```text
-["egg", "rice", "eggplant"]
-```
+## Important Notes
 
-`eggs` and `egg` are treated as the same ingredient. However, `egg` and
-`eggplant` remain different ingredients.
+- Most quantities cannot be reliably matched: units are missing and lists often differ.
+  Equal list lengths do not prove a correct pair. Never guess amounts or units.
+- Reviewed quantity references currently cover Recipes 38, 39, and 42.
+  Unverified amounts stay `NULL` with `pair_status = 'unresolved'`.
+- Verified source additions use `source_added = 1`; original names and positions stay intact.
+  `source_line` gives the source ingredient order for display.
+- Use the cleaned metadata input so previously removed recipes stay excluded.
 
-## How to Run
-
-Python 3.10 or later is required. No additional packages are needed.
-
-Open the project folder in VS Code. From the project root, run this command
-in the terminal:
-
-```bash
-python3 Fis4Food/src/database/ingredient_processing.py
-```
-
-The script reads `db.db` beside the Python file and saves the results in a new
-timestamped folder inside `Fis4Food/src/database/cleaned_output/`.
-
-## Output Files
-
-- `ingredients.jsonl`: Recipe IDs, positions, original ingredient names, and matching keys.
-- `recipes.jsonl`: Recipe names, original and parsed ingredient/quantity data, matching keys, and issues.
-- `validation_issues.jsonl`: Missing values, parsing errors, duplicates, and other data problems.
-- `summary.json`: Basic statistics about the cleaning results.
-
-Each JSONL file contains one record per line. A `.gitignore` file is also created
-to exclude the large JSONL files from Git. Keep generated outputs local.
-
-## Notes
-
-Some recipes have different numbers of ingredients and quantities. The script
-reports these mismatches without inventing quantities or pairing them with ingredients.
-Recipes with parsing errors are kept with their original values and error messages.
-
-The code focuses on ingredients and quantities. It does not clean images,
-nutrition information, or cooking times.
-
-The version has not yet completed formal regression testing.
-I'll work on testing over the next few days.
