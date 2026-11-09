@@ -5,9 +5,7 @@ import App from './App.jsx'
 import Recipe from './Recipe.jsx'
 
 createRoot(document.getElementById('root')).render( //remove StrictMode for live production version
-  <StrictMode> 
     <App />
-  </StrictMode>,
 )
 
 
