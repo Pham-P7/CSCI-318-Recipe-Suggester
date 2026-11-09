@@ -1,25 +1,24 @@
-import Logo from './assets/f4food_logo.svg?react';
+import TopBar from "./TopBar.jsx";
+import LogoText from './assets/f4food_pacifico.svg?react';
+import SearchBox from "./SearchBox.jsx";
+import "./App.css";
 
-function CornerLogo() {
-  return <Logo className="w-6 h-6 text-blue-500 hover:text-blue-700" />;
-}
 function Header({name = "user", ...props}){
   return (
     <header>
-      <h1>Fis4Food</h1>
-      <p>
-        welcome {name} to Fis4Food &#40;F is for food&#41;!
-      </p>
+      <LogoText className ="logo"/>
+      <h2>Welcome to f4Food &#40;f for food&#41;!</h2>
+      <p>What are you hungry for?</p>
     </header>
   );
 }
-function App() {
+function App() {  
   return (
     <div className="App">
-      <CornerLogo></CornerLogo>
+      <TopBar></TopBar>
       <Header></Header>
         <main>
-          <h2>What are you hungry for?</h2>
+          <SearchBox />
         </main>
     </div>
   );
