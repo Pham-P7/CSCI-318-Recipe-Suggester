@@ -12,7 +12,7 @@ export default function SearchBox(){
 function SearchBar(){
     return(
         <div className="SearchBar">
-            <input type="text" name="SearchBar-input" placeholder="Search by ingredients or by recipe name" className="SearchBar" />
+            <input type="text" name="SearchBar-input" placeholder="Find..." className="SearchBar" />
             <SearchIcon />
         </div>
     );
