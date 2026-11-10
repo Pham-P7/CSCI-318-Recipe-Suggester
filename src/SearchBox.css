@@ -1,7 +1,7 @@
 .SearchBox {
     background-color: #97b644ff;
-    width: 70vw;
-    height: 35vw;
+    width: 80vw;
+    height: 60dvh;
     border-radius: 50px;
 
     display: flex;
@@ -11,8 +11,8 @@
 
 .SearchBar {
     background-color: #f7e3c1ff;
-    width: 60vw;
-    height: 4vw;
+    width: 65vw;
+    height: 8dvh;
     border-radius: 50px;
     display: flex;
     flex-direction: row;
