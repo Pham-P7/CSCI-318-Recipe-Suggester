@@ -1,12 +1,14 @@
 .SearchBox {
     background-color: #97b644ff;
-    width: 80vw;
-    height: 60dvh;
+    width: 100%;
+    max-width: 1000px;
+    height: auto;
+    min-height: 500px;
     border-radius: 50px;
 
     display: flex;
     justify-content: center;
-    padding-top: 30px;
+    padding: 30px 20px;
 }
 
 .SearchBar {

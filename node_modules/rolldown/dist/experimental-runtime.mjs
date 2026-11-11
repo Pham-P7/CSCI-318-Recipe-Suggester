@@ -1,4 +1,4 @@
-//#region ../../crates/rolldown/src/runtime/runtime-base.js
+// ../../crates/rolldown/src/runtime/runtime-base.js
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -30,8 +30,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 	enumerable: true
 }) : target, mod));
 var __toCommonJS = (mod) => __hasOwnProp.call(mod, "module.exports") ? mod["module.exports"] : __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-//#endregion
-//#region ../../crates/rolldown_plugin_hmr/src/runtime/runtime-extra-dev-common.js
+// ../../crates/rolldown_plugin_hmr/src/runtime/runtime-extra-dev-common.js
 var Module = class {
 	/**
 	* @type {{ exports: any }}
@@ -58,7 +57,9 @@ var Module = class {
 * `bindings[i][j]` are the export names `ids[i]` imports through `edges[i][j]`. `bindings` holds
 * only some rows; a missing row, or a missing or `null` entry, means the whole namespace.
 * `dynamicEdges` also holds only some rows; a missing row means no dynamic edges.
-* @typedef {{ ids: string[], localCount: number, edges: number[][], bindings?: Record<number, (string[] | null)[]>, dynamicEdges?: Record<number, number[]> }} ModuleGraphDelta
+* `stamps[i]` is the rebuild stamp of `ids[i]`; a missing row means 0.
+* `entries` lists the rows whose module is an entry.
+* @typedef {{ ids: string[], localCount: number, edges: number[][], bindings?: Record<number, (string[] | null)[]>, dynamicEdges?: Record<number, number[]>, stamps?: Record<number, number>, entries?: number[] }} ModuleGraphDelta
 * @typedef {{ createModuleHotContext(moduleId: string): any, onModuleCacheRemoval(moduleId: string): void }} DevRuntimeHooks
 */
 var MissingFactoryError = class extends Error {
@@ -105,6 +106,8 @@ var DevRuntime = class {
 	* @type {Map<string, Set<string>>}
 	*/
 	dynamicImporters = /* @__PURE__ */ new Map();
+	/** @type {Set<string>} */
+	entries = /* @__PURE__ */ new Set();
 	/**
 	* The module cache. Membership means "this module's side effects ran in this tab" —
 	* registration is emitted ahead of every module body, and nothing un-registers on
@@ -121,6 +124,14 @@ var DevRuntime = class {
 	*/
 	factories = /* @__PURE__ */ new Map();
 	/**
+	* A late payload (a slow lazy chunk after an HMR patch) must not replace newer rows or
+	* factories.
+	* @type {Map<string, number>}
+	*/
+	rowStamps = /* @__PURE__ */ new Map();
+	/** @type {Map<string, number>} */
+	factoryStamps = /* @__PURE__ */ new Map();
+	/**
 	* Installed by the dev client at boot. The runtime is a store + executor and makes
 	* no HMR decisions; accepting, disposing, and reloading live behind these hooks.
 	* @type {DevRuntimeHooks | null}
@@ -132,6 +143,11 @@ var DevRuntime = class {
 	registerGraph(delta) {
 		for (let i = 0; i < delta.localCount; i++) {
 			const id = delta.ids[i];
+			if (delta.stamps) {
+				const stamp = delta.stamps[i] ?? 0;
+				if (stamp < (this.rowStamps.get(id) ?? 0)) continue;
+				this.rowStamps.set(id, stamp);
+			} else this.rowStamps.delete(id);
 			const edges = delta.edges[i].map((j) => delta.ids[j]);
 			for (const target of this.staticImports.get(id)?.edges ?? []) this.importers.get(target)?.delete(id);
 			for (const target of edges) {
@@ -157,13 +173,18 @@ var DevRuntime = class {
 				importerSet.add(id);
 			}
 			this.dynamicImports.set(id, { edges: dynamicEdges });
+			if (delta.entries?.includes(i)) this.entries.add(id);
+			else this.entries.delete(id);
 		}
 	}
 	/**
 	* @param {string} id
 	* @param {(id: string) => void} fn
+	* @param {number} [stamp]
 	*/
-	registerFactory(id, fn) {
+	registerFactory(id, fn, stamp = 0) {
+		if (stamp < (this.factoryStamps.get(id) ?? 0)) return;
+		this.factoryStamps.set(id, stamp);
 		this.factories.set(id, fn);
 	}
 	/**
@@ -197,6 +218,12 @@ var DevRuntime = class {
 		if (!this.dynamicImports.get(importer)?.edges.includes(id)) return names;
 		if (!names) return ["*"];
 		return names.includes("*") ? names : [...names, "*"];
+	}
+	/**
+	* @param {string} id
+	*/
+	isEntry(id) {
+		return this.entries.has(id);
 	}
 	/**
 	* @param {string} id
@@ -264,5 +291,4 @@ var DevRuntime = class {
 	/** @internal */
 	__reExport = __reExport;
 };
-//#endregion
 export { DevRuntime, MissingFactoryError };

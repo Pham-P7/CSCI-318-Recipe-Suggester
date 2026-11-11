@@ -5,7 +5,9 @@
  * `bindings[i][j]` are the export names `ids[i]` imports through `edges[i][j]`. `bindings` holds
  * only some rows; a missing row, or a missing or `null` entry, means the whole namespace.
  * `dynamicEdges` also holds only some rows; a missing row means no dynamic edges.
- * @typedef {{ ids: string[], localCount: number, edges: number[][], bindings?: Record<number, (string[] | null)[]>, dynamicEdges?: Record<number, number[]> }} ModuleGraphDelta
+ * `stamps[i]` is the rebuild stamp of `ids[i]`; a missing row means 0.
+ * `entries` lists the rows whose module is an entry.
+ * @typedef {{ ids: string[], localCount: number, edges: number[][], bindings?: Record<number, (string[] | null)[]>, dynamicEdges?: Record<number, number[]>, stamps?: Record<number, number>, entries?: number[] }} ModuleGraphDelta
  * @typedef {{ createModuleHotContext(moduleId: string): any, onModuleCacheRemoval(moduleId: string): void }} DevRuntimeHooks
  */
 export class MissingFactoryError {
@@ -53,6 +55,8 @@ export class DevRuntime {
      * @type {Map<string, Set<string>>}
      */
     dynamicImporters: Map<string, Set<string>>;
+    /** @type {Set<string>} */
+    entries: Set<string>;
     /**
      * The module cache. Membership means "this module's side effects ran in this tab" —
      * registration is emitted ahead of every module body, and nothing un-registers on
@@ -69,6 +73,14 @@ export class DevRuntime {
      */
     factories: Map<string, (id: string) => void>;
     /**
+     * A late payload (a slow lazy chunk after an HMR patch) must not replace newer rows or
+     * factories.
+     * @type {Map<string, number>}
+     */
+    rowStamps: Map<string, number>;
+    /** @type {Map<string, number>} */
+    factoryStamps: Map<string, number>;
+    /**
      * Installed by the dev client at boot. The runtime is a store + executor and makes
      * no HMR decisions; accepting, disposing, and reloading live behind these hooks.
      * @type {DevRuntimeHooks | null}
@@ -81,8 +93,9 @@ export class DevRuntime {
     /**
      * @param {string} id
      * @param {(id: string) => void} fn
+     * @param {number} [stamp]
      */
-    registerFactory(id: string, fn: (id: string) => void): void;
+    registerFactory(id: string, fn: (id: string) => void, stamp?: number): void;
     /**
      * @param {string} id
      * @param {{ exports: any }} [exportsHolder]
@@ -102,6 +115,10 @@ export class DevRuntime {
      * @returns {string[] | undefined}
      */
     getImportedBindings(importer: string, id: string): string[] | undefined;
+    /**
+     * @param {string} id
+     */
+    isEntry(id: string): any;
     /**
      * @param {string} id
      */
@@ -152,6 +169,8 @@ export class DevRuntime {
  * `bindings[i][j]` are the export names `ids[i]` imports through `edges[i][j]`. `bindings` holds
  * only some rows; a missing row, or a missing or `null` entry, means the whole namespace.
  * `dynamicEdges` also holds only some rows; a missing row means no dynamic edges.
+ * `stamps[i]` is the rebuild stamp of `ids[i]`; a missing row means 0.
+ * `entries` lists the rows whose module is an entry.
  */
 export type ModuleGraphDelta = {
     ids: string[];
@@ -159,6 +178,8 @@ export type ModuleGraphDelta = {
     edges: number[][];
     bindings?: Record<number, (string[] | null)[]>;
     dynamicEdges?: Record<number, number[]>;
+    stamps?: Record<number, number>;
+    entries?: number[];
 };
 /**
  * Compiler-emitted module-graph delta — topology (static + dynamic edges).
@@ -167,6 +188,8 @@ export type ModuleGraphDelta = {
  * `bindings[i][j]` are the export names `ids[i]` imports through `edges[i][j]`. `bindings` holds
  * only some rows; a missing row, or a missing or `null` entry, means the whole namespace.
  * `dynamicEdges` also holds only some rows; a missing row means no dynamic edges.
+ * `stamps[i]` is the rebuild stamp of `ids[i]`; a missing row means 0.
+ * `entries` lists the rows whose module is an entry.
  */
 export type DevRuntimeHooks = {
     createModuleHotContext(moduleId: string): any;
