@@ -1,6 +1,7 @@
 .SearchBox {
     background-color: #97b644ff;
     width: 100%;
+    min-width: 300;
     height: auto;
     border-radius: 50px;
 
