@@ -19,8 +19,7 @@
     overflow: hidden;
     justify-content: center;
     align-items: center;
-    padding-left: 1vw;
-    padding-right: 2vw;
+    padding: 0px 10px;
 }
 
 input {
