@@ -1,9 +1,7 @@
 .SearchBox {
     background-color: #97b644ff;
     width: 100%;
-    max-width: 1000px;
     height: auto;
-    min-height: 500px;
     border-radius: 50px;
 
     display: flex;
@@ -13,7 +11,7 @@
 
 .SearchBar {
     background-color: #f7e3c1ff;
-    width: 65vw;
+    width: 100%;
     height: 8dvh;
     border-radius: 50px;
     display: flex;

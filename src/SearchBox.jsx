@@ -1,27 +1,34 @@
 import "./SearchBox.css";
-import Search from "./assets/search.svg?react";
+import {Grid} from '@mui/material';
+import SearchIcon from "./assets/search.svg?react";
 
 export default function SearchBox(){
     return (
-        <div className="SearchBox">
-            <SearchBar />
-        </div>
+        <Grid container spacing={2}>
+            <Grid size={8} className="SearchBox">
+                <SearchBar />
+            </Grid>
+        </Grid>
     );
 }
 
 function SearchBar(){
     return(
-        <div className="SearchBar">
-            <input type="text" name="SearchBar-input" placeholder="Find..." className="SearchBar" />
-            <SearchIcon />
-        </div>
+        <Grid container spacing={1} className="SearchBar">
+            <Grid size={12}>
+                <input type="text" name="SearchBar-input" placeholder="Find..." className="SearchBar" />   
+            </Grid>
+            <Grid size ={2}>
+                <SearchIcon />
+            </Grid>
+        </Grid>
     );
 }
 
 function SearchIcon(){
     return (
         <button className="SearchIcon-button">
-            <Search className="SearchIcon"/>
+            <SearchIcon/>
         </button>
     );
 }
