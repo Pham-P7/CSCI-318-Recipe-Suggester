@@ -1,0 +1,31 @@
+(Black Text = Comments)
+Home Page (pg 1):
+	Click On:
+		Logo --> Home Page
+		Account/Profile --> Sidebar (pg 2)
+		Search Bar --> Search (pg 3)
+	Scroll Down --> Search (pg 3)
+
+Sidebar (pg 2):
+	Click On:
+		Bookmark --> Shows some bookmarked recipes
+		Recipe Names --> Recipe (pg 4)
+		(...) --> Something like Search (pg 3) but w/o the search bar; displays all bookmarked recipes
+		Login/Sign Up --> Login (pg 5)
+Search (pg 3):
+	Search Bar --> Type out/select ingredients
+	Click On:
+		Magnifying Glass --> Start the search
+		Image Icon --> Use the AI image input
+		Recipe Cards --> Recipe (pg 4)
+			Base Recipe Cards on top half of Recipe
+Recipe (pg 4):
+	Ignore dashed line; just there to "shorten" the page
+	Click On:
+		Logo --> Home Page (pg 1)
+		Account/Profile --> Sidebar (pg 2)
+Login (pg 5):
+	Username --> Takes in username
+	Password --> Takes in password
+	Click On:
+		Sign Up: --> Login but with create username, create password, and verify password
