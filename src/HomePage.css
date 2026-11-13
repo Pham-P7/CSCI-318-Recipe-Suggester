@@ -2,9 +2,11 @@
     height: 100px;
     width: auto;
 }
-.App {
+.HomePage {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    height: auto;
 }
