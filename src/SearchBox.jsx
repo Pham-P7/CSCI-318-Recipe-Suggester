@@ -18,7 +18,7 @@ function SearchBar(){
             <Grid size={{xs: 8, md: 11}}>
                 <input type="text" name="SearchBar-input" placeholder="Find..." className="SearchBar" /> 
             </Grid>
-            <Grid size={{xs: 1, md: 1}}>
+            <Grid size={{xs: .5, md: 1}}>
                 <SearchIcon />
             </Grid>
         </Grid>
