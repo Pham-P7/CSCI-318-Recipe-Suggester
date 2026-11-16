@@ -15,7 +15,7 @@ export default function SearchBox(){
 function SearchBar(){
     return(
         <Grid container spacing={0} className="SearchBar">
-            <Grid size={{xs:8, md: 11}}>
+            <Grid size={{xs:11, md: 11}}>
                 <input type="text" name="SearchBar-input" placeholder="Find..." className="SearchBar" /> 
             </Grid>
             <Grid size={{xs: .5, md: 1}}>
