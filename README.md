@@ -10,8 +10,8 @@ There is also a log-in feature to allow bookmarking recipes for easy access.
 ## Tech Stack
 
 Front-end: React, Vite, Material UI 3.0 \
-Back-end: Python, SQL, Node.js, Java Spring Environment \
-Architecture: Cloudflare Workers & D1-SQlite database
+Back-end: Python, SQLite, Node.js, Java Spring Environment \
+Architecture: Cloudflare Workers & D1-SQLite database
 
 ## Credits
 
