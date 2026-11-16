@@ -1,16 +1,21 @@
-# React + Vite
+# Fis4Food website
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+This website was designed as a semester group project for CSCI-318 Principles of Programming Languages at NYIT
 
-Currently, two official plugins are available:
+## Function
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The website is built to take searches for recipes based on name, ingredients, and various other filters to return recipes that match your description. \
+There is also a log-in feature to allow bookmarking recipes for easy access.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Front-end: React, Vite, Material UI 3.0 \
+Back-end: Python, SQLite, Node.js, Java Spring Environment \
+Architecture: Cloudflare Workers & D1-SQLite database
 
-## Expanding the Oxlint configuration
+## Credits
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Dizzy Dong - \
+Terry Ly -  \
+Keming Liu - \
+Phat Pham - front-end engineer, cloud architect, project management & scale testing
