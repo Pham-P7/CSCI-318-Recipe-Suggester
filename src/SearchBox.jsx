@@ -5,7 +5,7 @@ import Search from "./assets/search.svg?react";
 export default function SearchBox(){
     return (
         <Grid container spacing={1} className="SearchBox">
-            <Grid size={{xs: 6, md: 12}}>
+            <Grid size={{md: 12}}>
                 <SearchBar />
             </Grid> 
         </Grid>

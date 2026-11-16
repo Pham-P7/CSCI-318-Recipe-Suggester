@@ -2,7 +2,7 @@
   position: fixed;  /*note: try fixed or sticky position see whats better*/
   top: 0;
   left: 0;
-  width: 100vw; 
+  width: 100%; 
   z-index: 1000; 
   
   height: 60px;
