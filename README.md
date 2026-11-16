@@ -1,4 +1,4 @@
-#Fis4Food website
+# Fis4Food website
 
 This website was designed as a semester group project for CSCI-318 Principles of Programming Languages at NYIT
 
