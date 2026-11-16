@@ -6,10 +6,10 @@ import "./HomePage.css";
 export default function HomePage(){
     return (
         <Grid container spacing={2} className="HomePage">
-            <Grid size={8}>
+            <Grid size={12}>
                 <Header />
             </Grid>
-            <Grid size={8}>
+            <Grid size={10}>
                 <SearchBox />
             </Grid>
         </Grid>

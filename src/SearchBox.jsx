@@ -14,11 +14,11 @@ export default function SearchBox(){
 
 function SearchBar(){
     return(
-        <Grid container spacing={0} className="SearchBar">
+        <Grid container spacing={1} className="SearchBar">
             <Grid size={{xs: 8, md: 11}}>
                 <input type="text" name="SearchBar-input" placeholder="Find..." className="SearchBar" /> 
             </Grid>
-            <Grid size={{xs: .5, md: 1}}>
+            <Grid size={{xs: 4, md: 1}}>
                 <SearchIcon />
             </Grid>
         </Grid>
