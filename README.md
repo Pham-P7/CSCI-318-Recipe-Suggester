@@ -17,5 +17,5 @@ Architecture: Cloudflare Workers & D1-SQLite database
 
 Dizzy Dong - \
 Terry Ly -  \
-Keming Liu - \
+Keming Liu - back-end engineer, REST API development, Cloudflare D1 integration & backend testing
 Phat Pham - front-end engineer, cloud architect, project management & scale testing
